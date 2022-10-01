@@ -1,0 +1,72 @@
+---
+title: "About my habit - cycling"
+author: "Suraporn Puangpanbut"
+format: revealjs
+editor: visual
+---
+
+# My habit
+
+## Cycling
+
+If you are new to biking or cycling world, there are many kinds of bike that you can try,
+
+-   Road bike
+-   Mountain bike
+-   Downhill bike
+-   Gravel bike
+-   Commute bike
+
+I love to do road bike because we can go faster, and it feels great when speedy wind comes to your face, it makes me fresh \^\^
+
+## My Road Bike
+
+I got one road bike, it is Factor Ostro, with limited edition of Gorilla painting.
+
+![Factor Ostro "Gorilla"](mybike.png)
+
+## How much distance I ride per week ?
+
+Before MDS program start, I usually did biking 5 days a week. It will be 2 laps of BKK airport on weekday and 3 laps on weekend (23.5km for 1 lap of BKK airport). Therefore the total distance per month is calculated as :
+
+```{r}
+lap_dist = 23.5
+
+weekday_dist = 2*lap_dist*3 # 3 weekdays
+weekend_dist = 3*lap_dist*2 # 2 weekend
+
+total_dist_per_week <- weekday_dist + weekend_dist
+print('My riding distace per week is :')
+paste0(total_dist_per_week, ' km')
+```
+
+## Explore flight data
+
+The data shown below is also untidy if we consider the statistical question: what is the average flight duration from New York to Bermuda and whether date, airline or flight number influences this? The reason that it is untidy is that the data for a single observation (a single flight) is spread across two rows. Use pivot_wider to tidy this data frame. Your final data frame should only include the columns you would use in this statistical analysis (e.g., airline, date, flight, and duration).
+
+```{r}
+library(digest)
+library(readxl)
+library(testthat)
+library(tidyverse)
+options(repr.matrix.max.rows = 10)
+
+flight_untidy <- tibble(airline = c("UA", "UA", "DL", "DL", "WN", "WN", "UA", "UA", "DL", "DL", 
+                                     "WN", "WN"),
+                        date = c("2019-08-14", "2019-08-14", "2019-08-14", "2019-08-14", "2019-08-14", 
+                                 "2019-08-14", "2019-08-15", "2019-08-15", "2019-08-16", "2019-08-16", 
+                                 "2019-08-15", "2019-08-15"),
+                        flight = c("1545", "1545", "1743", "1743", "1122", "1122", "1545", "1545", 
+                                   "1741", "1741", "1122", "1122"),
+                        event = c("departure", "arrival", "departure", "arrival", "departure", 
+                                  "arrival", "departure", "arrival", "departure", "arrival", "departure", 
+                                  "arrival"), 
+                        time = c(515, 830, 527, 845, 535, 835, 520, 840, 530, 835, 533, 833))
+
+flight_tidy <- pivot_wider(flight_untidy,names_from=event,values_from=time) |> 
+                    mutate(duration=arrival-departure) |> 
+                    select(airline,date,flight,duration)
+
+flight_tidy
+
+```
